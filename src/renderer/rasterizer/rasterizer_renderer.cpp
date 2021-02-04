@@ -10,7 +10,7 @@ void cg::renderer::rasterization_renderer::init()
 //	model->(settings->model_path);
 
 	//// Create render target
-	//render_target = std::make_shared<cg::resource<cg::unsigned_color>>(settings->width, settings->height);
+	auto render_target = std::make_shared<cg::resource<cg::unsigned_color>>(settings->width, settings->height);
 	//camera = std::make_shared<cg::world::camera>();
 	//camera->set_height(static_cast<float>(settings->height));
 	//camera->set_width(static_cast<float>(settings->width));
@@ -23,8 +23,8 @@ void cg::renderer::rasterization_renderer::init()
 
 	// Create resterizer
 	//cg::renderer::rasterizer<float, cg::unsigned_color> rasterizer; лишнее
-	rasterizer = std::make_shared<cg::renderer::rasterizer<cg::vertex, cg::unsigned_color>>();
-	rasterizer->set_render_target(render_target, depth_buffer);
+	auto rasterizer = std::make_shared<cg::renderer::rasterizer<cg::vertex, cg::unsigned_color>>();
+	rasterizer->set_render_target(render_target);
 	//rasterizer->set_vertex_buffer(model->get_vertex_buffer());
 	//rasterizer->set_viewport(settings->width, settings->height);
 }
