@@ -39,24 +39,29 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 	auto& shapes = reader.GetShapes();
 	auto& materials = reader.GetMaterials();
 
+	size_t vertex_buffer_id = 0;
+	std::vector<size_t> per_shape_ids;
+	per_shape_ids.resize(shapes.size());
+
 	// Loop over shapes
 	for (size_t s = 0; s < shapes.size(); s++)
 	{
+
 		// Loop over faces(polygon)
 		size_t index_offset = 0;
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
 		{
 			int fv = shapes[s].mesh.num_face_vertices[f];
 			vertex_buffer_id += fv;
-			per_shapes_id[s] += fv;
+			per_shape_ids[s] += fv;
 		}
 	}
 
-	vertex_buffer = std::make_shared << cg::resource << cg::vertex >> (vertex_buffer_id);
-	per_shapes_buffer.resize(shapes.size());
+	vertex_buffer = std::make_shared<cg::resource<cg::vertex>>(vertex_buffer_id);
+	per_shape_buffer.resize(shapes.size());
 	for (size_t s = 0; s < shapes.size(); s++)
 	{
-		per_shape_buffer[s] = std::make_shared << cg::resource << cg::vertex >> (per_shapes_ids[s]);
+		per_shape_buffer[s] = std::make_shared<cg::resource<cg::vertex>>(per_shape_ids[s]);
 	}
 
 	// Loop over shapes
@@ -69,7 +74,7 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 			int fv = shapes[s].mesh.num_face_vertices[f];
 			// Loop over vertices in the face.
 			float3 normal;
-			if (shapes[s].mesh.indices[index_offset + v].normal_index < 0)
+			if (shapes[s].mesh.indices[index_offset].normal_index < 0)
 			{
 				auto a_id = shapes[s].mesh.indices[index_offset + 0];
 				auto b_id = shapes[s].mesh.indices[index_offset + 1];
@@ -106,9 +111,9 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 					vertex.ny = normal.y;
 					vertex.nz = normal.z;
 				}
-				if (material.size() > 0)
+				if (materials.size() > 0)
 				{
-					auto material = material[shapes[s].mesh.material_ids[f]];
+					auto material = materials[shapes[s].mesh.material_ids[f]];
 					vertex.ambient_r = material.ambient[0];
 					vertex.ambient_g = material.ambient[1];
 					vertex.ambient_b = material.ambient[2];

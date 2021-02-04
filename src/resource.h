@@ -36,7 +36,7 @@ template<typename T>
 inline resource<T>::resource(size_t size)
 {
 	data.resize(size);
-	item_sie = sizeof(T);
+	item_size = sizeof(T);
 	stride = 0;
 }
 template<typename T>
@@ -64,12 +64,12 @@ inline T& resource<T>::item(size_t item)
 template<typename T>
 inline T& resource<T>::item(size_t x, size_t y)
 {
-	return data.at(y*stride+x)
+	return data.at(y * stride + x);
 }
 template<typename T>
 inline size_t resource<T>::get_size_in_bytes() const
 {
-	return data.size()*item.size;
+	return data.size()*item_size;
 }
 template<typename T>
 inline size_t resource<T>::get_number_of_elements() const
