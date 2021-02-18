@@ -6,27 +6,27 @@
 void cg::renderer::rasterization_renderer::init()
 {
 	//	// Load model
-	//	model = std::make_shared<cg::world::model>();
-	//	model->(settings->model_path);
+		model = std::make_shared<cg::world::model>();
+		model->load_obj(settings->model_path);
 
 		//// Create render target
 	auto render_target = std::make_shared<cg::resource<cg::unsigned_color>>(settings->width, settings->height);
-	//camera = std::make_shared<cg::world::camera>();
-	//camera->set_height(static_cast<float>(settings->height));
-	//camera->set_width(static_cast<float>(settings->width));
-	//camera->set_position(float3{ settings->camera_position[0], settings->camera_position[1], settings->camera_position[2] });
-	//camera->set_theta(settings->camera_theta);
-	//camera->set_phi(settings->camera_phi);
-	//camera->set_angle_of_view(settings->camera_angle_of_view);
-	//camera->set_z_far(settings->camera_z_far);
-	//camera->set_z_near(settings->camera_z_near);
+	camera = std::make_shared<cg::world::camera>();
+	camera->set_height(static_cast<float>(settings->height));
+	camera->set_width(static_cast<float>(settings->width));
+	camera->set_position(float3{ settings->camera_position[0], settings->camera_position[1], settings->camera_position[2] });
+	camera->set_theta(settings->camera_theta);
+	camera->set_phi(settings->camera_phi);
+	camera->set_angle_of_view(settings->camera_angle_of_view);
+	camera->set_z_far(settings->camera_z_far);
+	camera->set_z_near(settings->camera_z_near);
 
 	// Create resterizer
-	//cg::renderer::rasterizer<float, cg::unsigned_color> rasterizer;
-	auto rasterizer = std::make_shared<cg::renderer::rasterizer<cg::vertex, cg::unsigned_color>>();
+
+	rasterizer = std::make_shared<cg::renderer::rasterizer<cg::vertex, cg::unsigned_color>>();
 	rasterizer->set_render_target(render_target);
-	//rasterizer->set_vertex_buffer(model->get_vertex_buffer());
-	//rasterizer->set_viewport(settings->width, settings->height);
+	rasterizer->set_vertex_buffer(model->get_vertex_buffer());
+	rasterizer->set_viewport(settings->width, settings->height);
 }
 
 void cg::renderer::rasterization_renderer::destroy() {}
@@ -36,21 +36,21 @@ void cg::renderer::rasterization_renderer::update() {}
 void cg::renderer::rasterization_renderer::render()
 {
 	float4x4 matrix = mul(camera->get_projection_matrix(), camera->get_view_matrix(), model->get_world_matrix());
-	/*rasterizer->vertex_shader[&](float4 vertex,
+	rasterizer->vertex_shader = [&](float4 vertex,
 								 cg::vertex vertex_data) {
 		auto processed_vertex = mul(matrix, vertex);
 		return std::make_pair(processed_vertex, vertex_data);
-	};*/
+	};
 
-	// rasterizer->pixel_shader = [](cg::vertex vertex_data, float z) {
-	//	return cg::color{ vertex_data.ambient_r,
-	//		vertex_data.ambient_b,
-	//		vertex_data.ambient_b };
-	//};
+	 rasterizer->pixel_shader = [](cg::vertex vertex_data, float z) {
+		return cg::color{ vertex_data.ambient_r,
+			vertex_data.ambient_b,
+			vertex_data.ambient_b };
+	};
 
 	rasterizer->clear_render_target({ 111, 14, 112 });
 
-	//rasterizer->draw(model->get_vertex_buffer()->get_number_of_elements(), 0);
+	rasterizer->draw(model->get_vertex_buffer()->get_number_of_elements(), 0);
 
 	cg::utils::save_resource(*render_target, settings->result_path);
 }
