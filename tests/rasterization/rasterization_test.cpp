@@ -36,16 +36,11 @@ SCENARIO("Rasterizer produces correct image")
 		{
 			rasterizer.clear_render_target({ 0, 0, 0 });
 			rasterizer.draw(3, 0);
-			
 
 			THEN("Make sure than image is correct")
 			{
 				for (size_t x = 0; x < 10; x++)
 				{
-					auto R = render_target->item(x, 0).r;
-					auto G = render_target->item(x, 0).g;
-					auto B = render_target->item(x, 0).b;
-
 					REQUIRE(render_target->item(x, 0).r == 255);
 					REQUIRE(render_target->item(x, 0).g == 255);
 					REQUIRE(render_target->item(x, 0).b == 255);

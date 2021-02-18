@@ -25,7 +25,7 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 
 	if (!reader.ParseFromFile(model_path.string(), reader_config))
 	{
-		if (!reader.Error().empty()) 
+		if (!reader.Error().empty())
 		{
 			THROW_ERROR(reader.Error());
 		}
@@ -80,7 +80,7 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 				auto b_id = shapes[s].mesh.indices[index_offset + 1];
 				auto c_id = shapes[s].mesh.indices[index_offset + 2];
 
-				float3 a{ attrib.vertices[3 * a_id.vertex_index + 0], 
+				float3 a{ attrib.vertices[3 * a_id.vertex_index + 0],
 					attrib.vertices[3 * a_id.vertex_index + 1],
 				attrib.vertices[3 * a_id.vertex_index + 2] };
 				float3 b{ attrib.vertices[3 * b_id.vertex_index + 0],
@@ -99,13 +99,13 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 				vertex.x = attrib.vertices[3 * idx.vertex_index + 0];
 				vertex.y = attrib.vertices[3 * idx.vertex_index + 1];
 				vertex.z = attrib.vertices[3 * idx.vertex_index + 2];
-				if (idx.normal_index > -1) 
+				if (idx.normal_index > -1)
 				{
 					vertex.nx = attrib.normals[3 * idx.normal_index + 0];
 					vertex.ny = attrib.normals[3 * idx.normal_index + 1];
 					vertex.nz = attrib.normals[3 * idx.normal_index + 2];
 				}
-				else 
+				else
 				{
 					vertex.nx = normal.x;
 					vertex.ny = normal.y;
@@ -131,7 +131,7 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 			}
 			index_offset += fv;
 			// per-face material
-			shapes[s].mesh.material_ids[f];
+			//shapes[s].mesh.material_ids[f];
 		}
 	}
 }
@@ -142,7 +142,7 @@ std::shared_ptr<cg::resource<cg::vertex>> cg::world::model::get_vertex_buffer() 
 }
 
 std::vector<std::shared_ptr<cg::resource<cg::vertex>>>
-	cg::world::model::get_per_shape_buffer() const
+cg::world::model::get_per_shape_buffer() const
 {
 	return per_shape_buffer;
 }
@@ -151,7 +151,7 @@ std::vector<std::shared_ptr<cg::resource<cg::vertex>>>
 const float4x4 cg::world::model::get_world_matrix() const
 {
 	return float4x4({ 1.0, 0.f, 0.f, 0.f },
-					{ 0.0, 1.f, 0.f, 0.f },
-					{ 0.0, 0.f, 1.f, 0.f },
-					{ 0.0, 0.f, 0.f, 1.f });
+		{ 0.0, 1.f, 0.f, 0.f },
+		{ 0.0, 0.f, 1.f, 0.f },
+		{ 0.0, 0.f, 0.f, 1.f });
 }
