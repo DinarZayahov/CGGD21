@@ -80,7 +80,7 @@ inline size_t resource<T>::get_number_of_elements() const
 template<typename T>
 inline size_t resource<T>::get_stride() const
 {
-	return stride;
+	return data.size();
 }
 struct color
 {
